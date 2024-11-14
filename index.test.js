@@ -45,6 +45,26 @@ test('Testing the /musicians POST endpoint', async () => {
     expect(responseData.name).toBe('Calvin');
     expect(responseData.instrument).toBe('Guitar');
 });
+test('Testing the /musicians POST endpoint with missing name', async () => {
+    const response = await request(app)
+        .post('/musicians')
+        .send({
+            instrument: 'Guitar'
+        });
+    const responseData = JSON.parse(response.text);
+    expect(response.statusCode).toBe(400);
+    expect(responseData.errors[0].msg).toBe('Name is required');
+});
+test('Testing the /musicians POST endpoint with missing instrument', async () => {
+    const response = await request(app)
+        .post('/musicians')
+        .send({
+            name: 'Calvin'
+        });
+    const responseData = JSON.parse(response.text);
+    expect(response.statusCode).toBe(400);
+    expect(responseData.errors[0].msg).toBe('Instrument is required');
+});
 
 test('Testing the /musicians PUT endpoint', async () => {
     const response = await request(app)
